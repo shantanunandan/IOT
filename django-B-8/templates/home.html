@@ -1,0 +1,43 @@
+
+<html>
+	<head>
+		<title>Home </title>
+	</head>
+	<body>
+		<table allign="center">
+		<thead>
+			<tr>
+				<th>LED</th>
+				<th>TEMPRATURE</th>
+				<th>OLED</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<form method="POST" action="{% url 'led' %}">
+						{% csrf_token %}
+						<div>
+							<input type="radio" name="led status" value="on">on
+							<input type="radio" name="led status" value="off">off
+						</div>
+						<button type="submit">Submit</button>
+					</form>
+				</td>
+				<td>
+					<p>{{temp}} degree celcius</p>
+				</td>
+                                <td>
+                                        <form method="POST" action="{% url 'oled' %}">
+                                                {% csrf_token %}
+                                                <div>
+                                                        <input type="text" name="oled">
+                                                </div>
+                                                <button type="submit">Submit</button>
+                                        </form>
+                                </td>			
+			</tr>
+		</tbody>
+	    </table>		
+	</body>
+</html>

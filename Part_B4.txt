@@ -1,0 +1,82 @@
+import RPi.GPIO as GPIO
+import time,sys
+lit=0
+bill=0
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(13,GPIO.IN)
+rc=0 #reveloution count r/min
+totc=0 #total count
+tz=0 #system start time
+tstrt=0.0 #mesurmt begin time
+tend=0.0 #measurement end time
+gpiolast=0 #last input status (0 or 1?)
+pulse=0
+constant=0.05  #calaberation factor
+print("approx water flow--")
+print("ctl-c to exit ")
+tz=time.time()
+while True:
+	rc=0
+	pulse=0
+	tstrt=time.time()
+	while pulse<=5:
+		try:
+			gpiocur=GPIO.input(13)
+			if (gpiocur !=0 and gpiocur != gpiolast):
+				pulse+=1
+			gpiolast=gpiocur
+		except KeyboardInterrupt:
+			#inter(lit,bill)
+			print("\n exiting...")
+			time.sleep(1)		 	
+			GPIO.cleanup()
+			print("done")
+			sys.exit()
+	rc+=1
+	totc+=1
+	tend=time.time()
+	lit=round(totc*constant,1)
+	print (' \n liters/min ',round((rc*constant)/(tend-tstrt),2),'approx')
+	print ('total liters ',round(totc*constant,1))
+	print ('time--',round((time.time()-tz)/60,2),'\t',time.asctime(time.localtime(time.time())),' \n ')
+	with open('bill.txt','w') as f:
+		f.write(str(lit))
+	bill=lit*5
+	#inter(lit,bill)
+
+
+
+////////////////////html javascript code
+
+
+
+ function readTextFile(file)
+{
+
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                document.getElementById("abc").innerHTML = allText;
+		var amount = allText * 5;
+		document.getElementById("cde").innerHTML = amount+" Rs./-";
+            }
+        }
+    }
+    rawFile.send(null);
+}
+
+<body onload=readTextFile("bill.txt")>
+
+
+
+
+
+
+
+

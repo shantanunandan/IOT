@@ -1,0 +1,23 @@
+import machine,time
+import dht
+
+temp=6
+
+d = dht.DHT11(machine.Pin(temp))
+led = machine.Pin(4,machine.Pin.OUT)
+
+relay = machine.Pin(5,machine.Pin.OUT)
+
+while True:
+	d.measure()
+	print(d.temperature())
+	print(d.humidity())
+	value = int(input("enter"))
+	if value==1:
+		led.on()
+		relay.on()
+	elif value==2:
+		led.off()
+		relay.off()
+	time.sleep(2)
+

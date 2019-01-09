@@ -1,0 +1,46 @@
+#include<DHT.h>
+#include<Adafruit_Sensor.h>
+
+
+int dht_pin = 4;
+int led1    = 5;
+int led2    = 6;
+int led3    = 7;
+
+DHT dht(dht_pin,DHT11);
+
+void setup(){
+	pinMode(led1,OUTPUT);
+	pinMode(led2,OUTPUT);
+	pinMode(led3,OUTPUT);
+	Serial.begin(9600);
+	dht.begin();
+}
+
+void loop(){
+
+	float temp,humi;
+	temp = dht.readTemperature();
+	humi = dht.readHumidity();
+	Serial.print(temp);
+	Serial.print(',');
+	Serial.print(humi);
+	Serial.print(',');
+	Serial.println('')
+	if(temp>30){
+		digitalWrite(led1,HIGH);
+		digitalWrite(led2,LOW);
+		digitalWrite(led3,LOW);	
+	}
+	else if(temp<30 && temp>25){
+		digitalWrite(led1,LOW);
+		digitalWrite(led2,HIGH);
+		digitalWrite(led3,LOW);
+	}
+	else{
+		digitalWrite(led1,LOW);
+		digitalWrite(led2,LOW);
+		digitalWrite(led3,HIGH);
+	}
+	delay(2);
+}

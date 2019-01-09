@@ -1,0 +1,83 @@
+from time import sleep
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(04,GPIO.OUT) # Servo 07
+GPIO.setup(06,GPIO.IN,pull_up_down=GPIO.PUD_UP) # Button 31
+GPIO.setup(13,GPIO.OUT) # DC Motor 33
+
+RED=17  # Board 11
+GREEN=27 # Board 13
+BLUE=22 # Board 15
+
+GPIO.setup(RED,GPIO.OUT)
+GPIO.output(RED,0)
+GPIO.setup(GREEN,GPIO.OUT)
+GPIO.output(GREEN,0)
+GPIO.setup(BLUE,GPIO.OUT)
+GPIO.output(BLUE,0)
+
+CLK=16 # Board 36
+DOUT=19 # Board 35
+DIN=20 # Board 38
+CS=25 # Board 22
+
+GPIO.setup([DIN,CLK,CS],GPIO.OUT)
+GPIO.setup(DOUT,GPIO.IN)
+
+potentiometer_adc=0;
+def readadc(adcnum,clockpin,mosipin,misopin,cspin):
+	if((adcnum>7) or (adcnum<0)):
+		return -1
+	GPIO.output(cspin,True)
+	GPIO.output(clockpin,False)
+	GPIO.output(cspin,False)
+	commandout=adcnum
+	commandout |=0x18
+	commandout<<=3
+	for i in range(5):
+		if(commandout & 0x80):
+			GPIO.output(mosipin,True)
+		else:
+			GPIO.output(mosipin,False)
+		commandout<<=1
+		GPIO.output(clockpin,True)
+		GPIO.output(clockpin,False)
+	adcout=0
+	for i in range(12):
+		GPIO.output(clockpin,True)
+		GPIO.output(clockpin,False)
+		adcout<<=1
+		if(GPIO.input(misopin)):
+			adcout |=0x1
+	GPIO.output(cspin,True)
+	adcout>>=1
+	return adcout
+def read_potentiometer():
+	trim_pot=readadc(potentiometer_adc,CLK,DIN,DOUT,CS)
+	return round(trim_pot/1024.0,2)
+val=[]
+while True:
+	button_state=GPIO.input(6)
+	if button_state==False:
+		GPIO.output(13,True)
+		print('button pressed...')
+		sleep(0.1)
+	else:
+		GPIO.output(13,False)
+	
+	##CODE for potentiometer begin from now
+
+
+	sleep(.1)
+	potentio_val=read_potentiometer()
+	print(potentio_val)
+	if(potentio_val<0.30):
+		val=[1,0,0]
+	elif(potentio_val<0.60):
+		val=[0,1,0]
+	else:
+		val=[0,0,1]
+	GPIO.output(GREEN,val[0])
+	GPIO.output(RED,val[1])
+	GPIO.output(BLUE,val[2])

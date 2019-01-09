@@ -1,0 +1,27 @@
+#include <BlynkSimpleStream.h>
+
+char auth[] = "f86e8e5577a5452bb2b4fd885d6c1340"; 
+#define DHTPIN 10         // What digital pin we're connected to
+DHT dht(DHTPIN, DHT11);
+BlynkTimer timer;
+void sendSensor()
+{
+  float h = dht.readHumidity();
+  float t = dht.readTemperature(); // or dht.readTemperature(true) for Fahrenheit
+
+  Blynk.virtualWrite(V5, h);
+  Blynk.virtualWrite(V6, t);
+}
+void setup()
+{
+  Serial.begin(9600);
+  Blynk.begin(Serial, auth);
+
+  dht.begin();
+  timer.setInterval(1000L, sendSensor);
+}
+void loop()
+{
+  Blynk.run();
+  timer.run();
+}
