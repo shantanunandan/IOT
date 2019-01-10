@@ -1,3 +1,9 @@
+
+Write a micro python script with esp8266 based nodemcu board to calculate the distance of a obstacle based on the 
+Ultrasonic sensor inputs. If the distance calculated is less than a certain value turn on a buzzer / beeper with a 
+LED in ON state and display the distance in LCD / OLED
+
+
 /---------------------------
 pin configurations
 
