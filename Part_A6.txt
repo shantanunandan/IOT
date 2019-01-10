@@ -1,3 +1,8 @@
+
+Write a micro python script with esp8266 based nodemcu board to operate a 4 channel relay demonstrating minimal 
+home automation
+
+
 import machine,time
 import dht
 
