@@ -1,3 +1,9 @@
+Write a program with Arduino UNO to indicate the level of temperature using the LEDs indicating the low, medium and high 
+values of temperature ( Red, Blue and Green )
+or  Write a program with Arduino UNO to implement the interactive traffic signal 
+
+
+
 #include<DHT.h>
 #include<Adafruit_Sensor.h>
 
