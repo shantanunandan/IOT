@@ -1,4 +1,9 @@
 
+Write a interactive python script on Raspberry Pi3 to implement the serial communication from Raspberry 
+Pi to Arduino and vice versa with the following components                                                                 
+a) LED b) Buzzer c) Temperature and humidity sensor b ) four channel relay
+
+
 Arduino - 
 
 #include<DHT.h>
